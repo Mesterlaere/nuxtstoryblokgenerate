@@ -34,11 +34,19 @@ if (story.value.status) {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
   console.log({
     isInStoryblokEditMode,
     versionFromConfig,
     storyVersion
   })
+  if (storyVersion === 'draft') {
+    const storyblokApi = useStoryblokApi()
+    const { data } = await storyblokApi.get(
+      `cdn/stories/${ storyPath }`,
+      apiOptions // API Options
+    )
+    console.log({ data })
+  }
 })
 </script>
