@@ -41,12 +41,22 @@ onMounted(async () => {
     storyVersion
   })
   if (storyVersion === 'draft') {
-    const storyblokApi = useStoryblokApi()
-    const { data } = await storyblokApi.get(
-      `cdn/stories/${ storyPath }`,
-      apiOptions // API Options
-    )
-    console.log({ data })
+    try {
+      const storyblokApi = useStoryblokApi()
+      const { data } = await storyblokApi.get(
+        `cdn/stories/${ storyPath }`,
+        apiOptions // API Options
+      )
+      if (data?.story?.content !== undefined) {
+        console.log('Got a draft version from SB', data.story.content.test_value)
+        story.value = ref(data.story)
+      } else {
+        console.log({ data })
+        throw new Error('Could not find story on Storyblok')
+      }
+    } catch (err) {
+      throw (err)
+    }
   }
 })
 </script>
