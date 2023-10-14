@@ -44,20 +44,16 @@ onMounted(async () => {
         versionFromConfig,
         storyVersion
       })
-    try {
-      const storyblokApi = useStoryblokApi()
-      const { data } = await storyblokApi.get(
-        `cdn/stories/${ storyPath }`,
-        apiOptions // API Options
-      )
-      if (data?.story?.content !== undefined) {
-        story.value = ref(data.story)
-      } else {
-        console.log({ data })
-        throw new Error('Could not find draft story to hydrate in Editor on Storyblok')
-      }
-    } catch (err) {
-      throw (err)
+    const storyblokApi = useStoryblokApi()
+    const { data } = await storyblokApi.get(
+      `cdn/stories/${ storyPath }`,
+      apiOptions // API Options
+    )
+    if (data?.story?.content !== undefined) {
+      story.value = ref(data.story)
+    } else {
+      console.log({ data })
+      throw new Error('Could not find draft story to hydrate in Editor on Storyblok')
     }
   }
 })
