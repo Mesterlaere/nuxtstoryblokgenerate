@@ -33,4 +33,12 @@ if (story.value.status) {
     statusMessage: story.value.response
   })
 }
+
+onMounted(() => {
+  console.log({
+    isInStoryblokEditMode,
+    versionFromConfig,
+    storyVersion
+  })
+})
 </script>
