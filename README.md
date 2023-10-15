@@ -1,4 +1,4 @@
-# Nuxt 3 Minimal Starter and Storyblok with Generate Static Site
+# Nuxt 3 Minimal Starter and Storyblok with generated static site
 
 ## Setup
 
