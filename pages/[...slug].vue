@@ -49,7 +49,7 @@ const { data: apiResponse } = await useAsyncData(slugRelatedUniqueKey, async () 
   return myApiEndpointResponse
 })
 
-console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse: apiResponse.value })
+console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse })
 
 onMounted(async () => {
   if (isInStoryblokEditMode) {
