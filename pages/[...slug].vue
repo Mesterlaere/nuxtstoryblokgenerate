@@ -3,6 +3,8 @@
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
     <pre>{{ apiResponse }}</pre>
+    <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
+    <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
   </div>
 </template>
 <script lang="ts" setup>
@@ -49,7 +51,7 @@ const { data: apiResponse } = await useAsyncData(slugRelatedUniqueKey, async () 
   return myApiEndpointResponse
 })
 
-console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse })
+console.log({ myApiEndpoint, slugRelatedUniqueKey }, apiResponse.value)
 
 onMounted(async () => {
   if (isInStoryblokEditMode) {
