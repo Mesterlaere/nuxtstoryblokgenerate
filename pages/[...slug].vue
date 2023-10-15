@@ -34,6 +34,23 @@ if (story.value.status) {
   })
 }
 
+// Test hydration behaviour
+const myApiEndpoint = 'https://europe-west1-mesterlaere-app.cloudfunctions.net/api-app-getVersion'
+const slugRelatedUniqueKey = storyPath
+const apiResponse = ref<any>(null)
+/*
+// This will fetch again on hydration
+const { data } = await useFetch(myApiEndpoint)
+const externalData = ref(data)
+*/
+// How about this?
+await useAsyncData(slugRelatedUniqueKey, async () => {
+  const myApiEndpointResponse = await $fetch(myApiEndpoint)
+  apiResponse.value = myApiEndpointResponse
+})
+
+console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse: apiResponse.value })
+
 onMounted(async () => {
   if (isInStoryblokEditMode) {
     console.log(
