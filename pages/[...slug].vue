@@ -35,9 +35,9 @@ if (story.value.status) {
 }
 
 onMounted(async () => {
-  if (storyVersion === 'draft') {
+  if (isInStoryblokEditMode) {
     console.log(
-      'Rehydrate for in draft mode',
+      'Rehydrate for in isInStoryblokEditMode mode',
       {
         storyPath,
         isInStoryblokEditMode,
