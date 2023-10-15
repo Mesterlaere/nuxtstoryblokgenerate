@@ -2,6 +2,7 @@
   <div name="component-page-slug">
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
+    <pre>{{ apiResponse }}</pre>
   </div>
 </template>
 <script lang="ts" setup>
@@ -48,7 +49,7 @@ const { data: apiResponse } = await useAsyncData(slugRelatedUniqueKey, async () 
   return myApiEndpointResponse
 })
 
-console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse: apiResponse.value })
+console.log({ myApiEndpoint, slugRelatedUniqueKey, apiResponse })
 
 onMounted(async () => {
   if (isInStoryblokEditMode) {
