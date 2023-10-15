@@ -2,6 +2,7 @@
   <div name="component-page-slug">
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
+    <pre>{{ apiResponse }}</pre>
   </div>
 </template>
 <script lang="ts" setup>
