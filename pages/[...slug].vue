@@ -1,19 +1,19 @@
 <template>
   <div name="component-page-slug">
-    <pre>{{ story.name }}</pre>
-    <pre>{{ story.content.test_value }}</pre>
-    <ul>
-      <li>
-        <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
-      </li>
-      <li>
-        <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
-      </li>
-    </ul>
+    <nav>
+      <ul>
+        <li v-for="navLink in (global?.content?.navigation || [])">
+    <NuxtLink :to="'/' + navLink.link.story.full_slug">{{ navLink.label }}</NuxtLink>
+        </li>
+      </ul>
+      </nav>
+    <pre>Global Name: {{ global.name }}</pre>
+    <pre>Story name: {{ story.name }}</pre>
+    <pre>Some story value: {{ story.content.test_value }}</pre>
   </div>
 </template>
 <script lang="ts" setup>
-import type { ISbStoryData, ISbStoriesParams, StoryblokBridgeConfigV2 } from '@storyblok/vue'
+import type { ISbStoriesParams, StoryblokBridgeConfigV2 } from '@storyblok/vue'
 const route = useRoute()
 const config = useRuntimeConfig()
 
@@ -38,6 +38,12 @@ const story = await useAsyncStoryblok(
   apiOptions, // API Options
   bridgeOptions // Bridge Options
 )
+const global = await useAsyncStoryblok(
+  globalPath,
+  apiOptions, // API Options
+  bridgeOptions // Bridge Options
+)
+
 
 if (story.value.status) {
   throw createError({
