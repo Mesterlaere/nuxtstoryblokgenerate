@@ -3,13 +3,23 @@
     <nav>
       <ul>
         <li v-for="navLink in (global?.content?.navigation || [])">
-          <NuxtLink :to="'/' + navLink.link.story.full_slug">{{ navLink.label }}</NuxtLink>
+    <NuxtLink :to="'/' + navLink.link.story.full_slug">{{ navLink.label }}</NuxtLink>
         </li>
       </ul>
       </nav>
     <pre>Global Name: {{ global?.name }}</pre>
     <pre>Story name: {{ story.name }}</pre>
     <pre>Some story value: {{ story.content.test_value }}</pre>
+    <nav>
+      <ul>
+        <li>
+          <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
+        </li>
+      </ul>
+      </nav>
   </div>
 </template>
 <script lang="ts" setup>
@@ -34,6 +44,16 @@ const bridgeOptions: StoryblokBridgeConfigV2 = {
   preventClicks: true,
   resolveLinks: 'story'
 }
+/* const story = await useAsyncStoryblok(
+  storyPath,
+  apiOptions, // API Options
+  bridgeOptions // Bridge Options
+)
+const global = await useAsyncStoryblok(
+  globalPath,
+  apiOptions, // API Options
+  bridgeOptions // Bridge Options
+) */
 const { data: story } = await useAsyncData(storyPath, async () => {
   const { data } = await storyblokApi.get(
       `cdn/stories/${ storyPath }`,
@@ -41,13 +61,7 @@ const { data: story } = await useAsyncData(storyPath, async () => {
     )
     return data.story
 })
-const { data: global } = await useAsyncData(globalPath, async () => {
-  const { data } = await storyblokApi.get(
-      `cdn/stories/${ globalPath }`,
-      apiOptions // API Options
-    )
-    return data.story
-})
+const global = ref()
 
 if (story.value.status) {
   throw createError({
