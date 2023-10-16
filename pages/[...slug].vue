@@ -1,18 +1,16 @@
 <template>
   <div name="component-page-slug">
-    <nav>
-      <ul>
-        <li
-        v-for="navLink in (global?.content?.navigation || [])"
-        :key="navLink._uid"
-        >
-          <NuxtLink :to="'/' + navLink.link.story.full_slug">{{navLink.label}}</NuxtLink>
-        </li>
-      </ul>
-      </nav>
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
     <pre>{{ apiResponse }}</pre>
+    <ul>
+      <li>
+        <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
+      </li>
+      <li>
+        <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
+      </li>
+    </ul>
   </div>
 </template>
 <script lang="ts" setup>
@@ -41,12 +39,6 @@ const story = await useAsyncStoryblok(
   apiOptions, // API Options
   bridgeOptions // Bridge Options
 )
-const global = await useAsyncStoryblok(
-  globalPath,
-  apiOptions, // API Options
-  bridgeOptions // Bridge Options
-)
-
 
 if (story.value.status) {
   throw createError({
