@@ -1,13 +1,14 @@
 <template>
   <div name="component-page-slug">
+    <pre>Global Name: {{ global?.name }}</pre>
     <nav>
       <ul>
         <li v-for="navLink in (global?.content?.navigation || [])">
           <NuxtLink :to="'/' + navLink.link.story.full_slug">{{ navLink.label }}</NuxtLink>
         </li>
       </ul>
-      </nav>
-    <pre>Global Name: {{ global?.name }}</pre>
+    </nav>
+    <hr />
     <pre>Story name: {{ story.name }}</pre>
     <pre>Some story value: {{ story.content.test_value }}</pre>
   </div>
@@ -66,6 +67,18 @@ onMounted(async () => {
         versionFromConfig,
         storyVersion
       })
+      // First, get the story directly from Storyblok API as the current story comes from build time
+      const { data } = await storyblokApi.get(
+        `cdn/stories/${ storyPath }`,
+        apiOptions // API Options
+      )
+      if (data?.story?.content !== undefined) {
+        story.value = data.story
+      } else {
+        console.log({ data })
+        throw new Error('Could not find draft story to hydrate in Editor on Storyblok')
+      }
+      // Now, attach the StoryblokBridge to get WYSIWYG updated from Editor
       useStoryblokBridge(
         story.value.id,
         (storyForEdit) => (story.value = storyForEdit),
