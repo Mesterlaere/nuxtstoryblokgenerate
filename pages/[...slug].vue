@@ -37,14 +37,14 @@ const bridgeOptions: StoryblokBridgeConfigV2 = {
 const { data: story } = await useAsyncData(storyPath, async () => {
   const { data } = await storyblokApi.get(
       `cdn/stories/${ storyPath }`,
-      apiOptions // API Options
+      apiOptions
     )
     return data.story
 })
 const { data: global } = await useAsyncData(globalPath, async () => {
   const { data } = await storyblokApi.get(
       `cdn/stories/${ globalPath }`,
-      apiOptions // API Options
+      apiOptions
     )
     return data.story
 })
@@ -66,17 +66,11 @@ onMounted(async () => {
         versionFromConfig,
         storyVersion
       })
-    const storyblokApi = useStoryblokApi()
-    const { data } = await storyblokApi.get(
-      `cdn/stories/${ storyPath }`,
-      apiOptions // API Options
-    )
-    if (data?.story?.content !== undefined) {
-      story.value = ref(data.story)
-    } else {
-      console.log({ data })
-      throw new Error('Could not find draft story to hydrate in Editor on Storyblok')
-    }
+      useStoryblokBridge(
+        story.value.id,
+        (storyForEdit) => (story.value = storyForEdit),
+        bridgeOptions
+      )
   }
 })
 </script>
