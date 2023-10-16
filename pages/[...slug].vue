@@ -2,7 +2,6 @@
   <div name="component-page-slug">
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
-    <pre>{{ apiResponse }}</pre>
     <ul>
       <li>
         <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
@@ -46,22 +45,6 @@ if (story.value.status) {
     statusMessage: story.value.response
   })
 }
-
-// Test hydration behaviour
-const myApiEndpoint = 'https://europe-west1-mesterlaere-app.cloudfunctions.net/api-app-getVersion'
-const slugRelatedUniqueKey = storyPath
-/*
-// This will fetch again on hydration
-const { data } = await useFetch(myApiEndpoint)
-const externalData = ref(data)
-*/
-// How about this?
-const { data: apiResponse } = await useAsyncData(slugRelatedUniqueKey, async () => {
-  const myApiEndpointResponse = await $fetch(myApiEndpoint)
-  return myApiEndpointResponse
-})
-
-console.log({ myApiEndpoint, slugRelatedUniqueKey }, apiResponse.value)
 
 onMounted(async () => {
   if (isInStoryblokEditMode) {
