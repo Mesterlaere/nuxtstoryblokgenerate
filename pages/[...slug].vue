@@ -7,15 +7,26 @@
         </li>
       </ul>
       </nav>
-    <pre>Global Name: {{ global.name }}</pre>
+    <pre>Global Name: {{ global?.name }}</pre>
     <pre>Story name: {{ story.name }}</pre>
     <pre>Some story value: {{ story.content.test_value }}</pre>
+    <nav>
+      <ul>
+        <li>
+          <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
+        </li>
+      </ul>
+      </nav>
   </div>
 </template>
 <script lang="ts" setup>
 import type { ISbStoriesParams, StoryblokBridgeConfigV2 } from '@storyblok/vue'
 const route = useRoute()
 const config = useRuntimeConfig()
+const storyblokApi = useStoryblokApi()
 
 const matchedLocale = config.public.enabledLocales.find(locale => locale === (route?.params?.slug || [])[0])
 const locale = matchedLocale || config.public.enabledLocales[0]
@@ -33,7 +44,7 @@ const bridgeOptions: StoryblokBridgeConfigV2 = {
   preventClicks: true,
   resolveLinks: 'story'
 }
-const story = await useAsyncStoryblok(
+/* const story = await useAsyncStoryblok(
   storyPath,
   apiOptions, // API Options
   bridgeOptions // Bridge Options
@@ -42,8 +53,15 @@ const global = await useAsyncStoryblok(
   globalPath,
   apiOptions, // API Options
   bridgeOptions // Bridge Options
-)
-
+) */
+const { data: story } = await useAsyncData(storyPath, async () => {
+  const { data } = await storyblokApi.get(
+      `cdn/stories/${ storyPath }`,
+      apiOptions // API Options
+    )
+    return data.story
+})
+const global = ref()
 
 if (story.value.status) {
   throw createError({
