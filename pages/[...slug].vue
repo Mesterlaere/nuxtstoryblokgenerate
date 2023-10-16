@@ -1,16 +1,28 @@
 <template>
   <div name="component-page-slug">
+    <nav>
+      <ul>
+        <li
+        v-for="navLink in (global?.content?.navigation || [])"
+        :key="navLink._uid"
+        >
+          <NuxtLink :to="'/' + navLink.link.story.full_slug">{{navLink.label}}</NuxtLink>
+        </li>
+      </ul>
+      </nav>
     <pre>{{ story.name }}</pre>
     <pre>{{ story.content.test_value }}</pre>
     <pre>{{ apiResponse }}</pre>
-    <NuxtLink to="/da/page-1">/da/page-1</NuxtLink>
-    <NuxtLink to="/da/page-2">/da/page-2</NuxtLink>
   </div>
 </template>
 <script lang="ts" setup>
 import type { ISbStoryData, ISbStoriesParams, StoryblokBridgeConfigV2 } from '@storyblok/vue'
 const route = useRoute()
 const config = useRuntimeConfig()
+
+const matchedLocale = config.public.enabledLocales.find(locale => locale === (route?.params?.slug || [])[0])
+const locale = matchedLocale || config.public.enabledLocales[0]
+const globalPath = `${ locale }/global-settings`
 const storyPath = route?.params?.slug && route.params.slug.length > 0 ? (route.params.slug as string[]).join('/') : 'home'
 // Which version of Storyblok content to render
 const isInStoryblokEditMode = !!route.query?._storyblok
@@ -29,6 +41,12 @@ const story = await useAsyncStoryblok(
   apiOptions, // API Options
   bridgeOptions // Bridge Options
 )
+const global = await useAsyncStoryblok(
+  globalPath,
+  apiOptions, // API Options
+  bridgeOptions // Bridge Options
+)
+
 
 if (story.value.status) {
   throw createError({

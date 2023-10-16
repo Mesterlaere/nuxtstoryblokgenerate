@@ -4,6 +4,13 @@
 const generateConcurrency = Number(process.env.GENERATE_CONCURRENCY || 30)
 
 export default defineNuxtConfig({
+  runtimeConfig: {
+    // Private config that is only available on the server
+    public: {
+      // Config within public will be also exposed to the client
+      enabledLocales: ['da']
+    }
+  },
   devtools: { enabled: true },
   modules: [
     '@storyblok/nuxt'
