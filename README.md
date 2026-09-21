@@ -1,73 +1,48 @@
-# Nuxt 3 Minimal Starter and Storyblok with generated static site
+# nuxtstoryblokgenerate
 
-## Setup
+**Finished spike. Superseded — do not build on this.**
 
-Make sure to install the dependencies:
+A standalone Nuxt 3 lab from October 2023, used to work out two things for the real
+site: getting `nuxt generate` to prerender every Storyblok story, and getting the
+Storyblok preview bridge to work. The branch it was done on was literally called
+`simonk/make-generate-and-preview-work`.
 
-```bash
-# npm
-npm install
+It worked, and the result was moved into the production repo —
+[`Mesterlaere/mesterlaere-app`](https://github.com/Mesterlaere/mesterlaere-app),
+directory `webapp`, where `nuxt.config.ts` carries the same `nitro:config` hook, the
+same `GENERATE_CONCURRENCY` cap and a proper `build-utils/generate/fetchStories`
+module. This repo has had no commits since.
 
-# pnpm
-pnpm install
+**This is not the site behind www.mesterlaere.dk.** All three branches (`Develop`,
+`Staging`, `Production`) hold the same ~18 files and four dependencies. The live site
+also runs Firebase, Sentry, Mixpanel, Nuxt UI Pro, Tailwind and i18n, none of which
+are here.
 
-# yarn
-yarn install
+## What it does
 
-# bun
-bun install
-```
+`nuxt.config.ts` hooks `nitro:config` and, on every non-dev build, walks the Storyblok
+Content Delivery API (`/v2/cdn/stories`, 60 per page) to collect every story slug, then
+pushes them into `nitro.prerender.routes`. `crawlLinks` is off, so that list *is* the
+site. The `GlobalSettingsInternational` component is skipped, as are slugs starting
+with `archive/` or `undefined`. Prerender concurrency is capped at 30 requests/second
+because Storyblok rate-limits at 50; set `GENERATE_CONCURRENCY=1` for readable errors.
 
-## Development Server
+`vercelscript.sh` is Vercel's ignored-build-step gate, building only on `Develop`,
+`Staging`, `Production` and `preview*`. Its exit codes look inverted — `exit 1` means
+proceed, `exit 0` means cancel — which is Vercel's convention, not a bug.
 
-Start the development server on `http://localhost:3000`:
+Environment: `STORYBLOK_TOKEN` (space `164309`), `STORYBLOK_VERSION` (`draft` or
+`published`), `ENVIRONMENT` (anything but `production` enables the bridge and
+devtools), `GENERATE_CONCURRENCY`.
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
+## If you do run it
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+yarn install    # yarn.lock is what is committed; another manager re-resolves the
+yarn dev        # ^ ranges and gives you a different tree — bun install today
+yarn generate   # yields nuxt 3.21.11 against a locked 3.7.4
 ```
 
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+`localhost-key.pem` and `localhost.pem` are committed dev certs for `yarn devsec`.
+They predate the `.pem` line in `.gitignore`. Only valid for localhost, so hygiene
+rather than an incident — but do not copy that pattern forward.
